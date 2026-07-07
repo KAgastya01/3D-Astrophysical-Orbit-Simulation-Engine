@@ -1,4 +1,4 @@
-# 🚀 3D Astrophysical Orbit Simulation Engine
+# 3D Astrophysical Orbit Simulation Engine
 
 A high-performance, interactive 3D N-body orbital mechanics engine built from scratch using **100% Vanilla Java**. This project implements celestial mechanics calculations and projects 3D spatial environments onto a 2D screen using custom trigonometric projection matrices—**completely free of heavy third-party dependencies like OpenGL, Java3D, or OpenCV.**
 
@@ -13,7 +13,7 @@ A high-performance, interactive 3D N-body orbital mechanics engine built from sc
 
 ---
 
-## 🧮 Theoretical & Mathematical Framework
+## Theoretical & Mathematical Framework
 
 ### 1. Gravitational Interactions (N-Body Vector Formulation)
 Every body in the workspace exerts a gravitational pull on every other body. The dynamic step-velocity updates are mapped using:
@@ -41,7 +41,7 @@ $$Y_{screen} = CenterY - \left( \frac{y_2 \cdot FocalLength}{z_2 + DistanceOffse
 
 ---
 
-## 🛠️ User Interface & Control Telemetry
+## User Interface & Control Telemetry
 
 Once launched, the active window features an overlay heads-up telemetry display. You can navigate the interactive viewport space via:
 
@@ -54,7 +54,7 @@ Once launched, the active window features an overlay heads-up telemetry display.
 
 ---
 
-## 🚀 Compilation & Quick Start
+## Compilation & Quick Start
 
 Since this engine relies entirely on the native Java Runtime Environment (`java.desktop` modules), you do not need to configure Maven, Gradle, or download extra `.jar` packages. 
 

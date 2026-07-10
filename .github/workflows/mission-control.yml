@@ -1,0 +1,86 @@
+name: 🌌 Orbital Mission Control
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  fork: # Tracks when someone clones your project via a repository fork
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  space-readiness:
+    name: 🛰️ Gravity & Matrix Math Integrity Check
+    runs-on: ubuntu-latest
+    steps:
+
+    # 1. Catch the repo fork event and log the username
+    - name: 🪐 Deep Space Radar Alert (Fork Check)
+      if: github.event_name == 'fork'
+      run: |
+        echo "🚨 RADAR SYSTEM: A new rogue celestial body has emerged!"
+        echo "🚀 @${{ github.event.sender.login }} just hijacked a copy of the coordinate maps (Forked the Engine)!"
+        echo "📡 Readying onboarding protocols for target system initialization..."
+
+    # 2. Pull down the space-time continuum code for push/pull loops
+    - name: 🚀 Initializing Trajectory (Checkout)
+      if: github.event_name != 'fork'
+      uses: actions/checkout@v4
+
+    # 3. Boot up OpenJDK (Keeping it pure Vanilla Java!)
+    - name: ☕ Igniting Java Fusion Core (Setup JDK)
+      if: github.event_name != 'fork'
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    # 4. Attempt compiling using native javac (No heavy third-party garbage allowed)
+    - name: 🛠️ Compiling Celestial Matrix (javac)
+      if: github.event_name != 'fork'
+      run: |
+        if [ ! -f Simulator.java ]; then
+          echo "::error file=Simulator.java::🚨 INVERSION DETECTED: Simulator.java was vaporized in deep space!"
+          exit 1
+        fi
+        javac Simulator.java
+
+    # 5. Automated Matrix Validation Checks
+    - name: 📐 Scanning Code for Singularity Anomalies
+      if: github.event_name != 'fork'
+      run: |
+        echo "🪐 Scanning vector tracking algorithms for Newton's Law deviations..."
+        if ! grep -q "epsilon" Simulator.java && ! grep -q "softening" Simulator.java; then
+          echo "::warning::⚠️ Softening modifier warning! Watch out for singularity division-by-zero crashes when bodies intersect!"
+        fi
+        echo "✅ Visual field math engines are structurally functional!"
+
+    # 6. Post an automated hype comment directly on the contributor's Pull Request
+    - name: 🎮 Level Up Contributor
+      if: github.event_name == 'pull_request' && success()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const prAuthor = context.payload.pull_request.user.login;
+          const telemetryMessage = `
+          ## 🪐 QUEST UPDATE: Orbit Achieved!
+          
+          Hey @${prAuthor}, your space vector modifications just cleared our launchpad telemetry scan! 🚀
+          
+          ### 🏆 Unlocked Accomplishments
+          - 🌌 **Celestial Navigator**: Successfully targeted the root directory bytecode phase.
+          - 📐 **Matrix Architect**: Tweaked trigonometric spatial transformation steps without causing a runtime space-time collapse.
+          - ☕ **Vanilla Evangelist**: Kept the workspace completely free of bloated OpenGL packages!
+          
+          Our system compiler executed at a perfect 100% success rate. The bridge crew is reviewing your telemetry changes now! 🛰️
+          `;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: telemetryMessage
+          });

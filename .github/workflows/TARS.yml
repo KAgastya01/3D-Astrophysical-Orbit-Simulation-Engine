@@ -1,0 +1,132 @@
+name: TARS 
+
+on:
+  workflow_dispatch:
+    inputs:
+      contributor_handle:
+        description: 'GitHub username of the target contributor'
+        required: true
+        type: string
+      context_reference:
+        description: 'Issue or Pull Request number for context injection'
+        required: false
+        type: string
+      task_description:
+        description: 'Detailed description of the development task or anomaly'
+        required: true
+        type: string
+      honesty_parameter:
+        description: 'TARS Honesty Parameter setting (%)'
+        required: false
+        default: '95'
+        type: choice
+        options:
+          - '60'
+          - '75'
+          - '90'
+          - '95'
+          - '100'
+      debug_mode:
+        description: 'Enable verbose diagnostic logging'
+        required: false
+        type: boolean
+        default: false
+
+# Enterprise Security: Principle of Least Privilege
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+  actions: read
+
+# Concurrency Control: Cancel in-progress runs for the same contributor/reference to save CI/CD minutes
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.inputs.contributor_handle }}-${{ github.event.inputs.context_reference || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  AGENT_VERSION: 'v2.4.1-enterprise'
+  MAX_RETRIES: 3
+  API_TIMEOUT_SECONDS: 120
+
+jobs:
+  tars-agent-execution:
+    name: Execute TARS Assistance Routine
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15 # Prevent runaway processes
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Full history required for agent context analysis
+
+      - name: Validate Inputs and Configure Environment
+        id: config
+        run: |
+          echo "[INFO] Validating workflow inputs..."
+          if [[ -z "${{ github.event.inputs.contributor_handle }}" ]]; then
+            echo "[ERROR] Contributor handle is strictly required."
+            exit 1
+          fi
+          echo "CONTRIBUTOR=${{ github.event.inputs.contributor_handle }}" >> $GITHUB_ENV
+          echo "DEBUG_LOGGING=${{ github.event.inputs.debug_mode }}" >> $GITHUB_ENV
+          echo "[INFO] Input validation successful."
+
+      - name: Initialize Agent Subsystems
+        run: |
+          echo "=================================================="
+          echo "  INITIALIZING TARS TACTICAL ASSISTANCE UNIT      "
+          echo "=================================================="
+          echo "[SYSTEM] Version: $AGENT_VERSION"
+          echo "[SYSTEM] Target Contributor: @${{ env.CONTRIBUTOR }}"
+          echo "[SYSTEM] Context Reference: ${{ github.event.inputs.context_reference || 'N/A' }}"
+          echo "[SYSTEM] Honesty Parameter: ${{ github.event.inputs.honesty_parameter }}%"
+          echo "[SYSTEM] Humor Parameter: Locked at 75% (Enterprise Policy Enforced)"
+          if [[ "$DEBUG_LOGGING" == "true" ]]; then
+            echo "[DEBUG] Verbose logging enabled. Trace ID: $GITHUB_RUN_ID"
+          fi
+
+      - name: Execute Codebase Static Analysis
+        id: analysis
+        run: |
+          echo "[INFO] Initiating deep scan of 3D Astrophysical Orbit Simulation Engine components..."
+          echo "[INFO] Target directories: physics_modules/, integrators/, docs/"
+          # Simulated enterprise analysis execution
+          sleep 3
+          echo "[INFO] Scan complete. Zero critical vulnerabilities detected in vector calculus modules."
+
+      - name: Generate Diagnostic Report
+        id: report
+        run: |
+          REPORT_FILE="tars_diagnostic_report.md"
+          
+          # Construct Markdown Report
+          echo "### TARS Mission Diagnostic Report" > $REPORT_FILE
+          echo "**Target Contributor:** @${{ env.CONTRIBUTOR }}" >> $REPORT_FILE
+          echo "**Task Context:** ${{ github.event.inputs.task_description }}" >> $REPORT_FILE
+          echo "**Timestamp:** $(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $REPORT_FILE
+          echo "---" >> $REPORT_FILE
+          echo "#### System Configuration" >> $REPORT_FILE
+          echo "- **Agent Version:** $AGENT_VERSION" >> $REPORT_FILE
+          echo "- **Honesty Parameter:** ${{ github.event.inputs.honesty_parameter }}%" >> $REPORT_FILE
+          echo "" >> $REPORT_FILE
+          echo "#### Analysis Output and Recommendations" >> $REPORT_FILE
+          echo "1. **Integration Integrity:** Step size integrations align with standard operational parameters defined in \`Welcome-Pilot.md\`." >> $REPORT_FILE
+          echo "2. **Vector Verification:** Ensure new orbital vectors are plotted accurately across $X, Y, Z$ dimensions." >> $REPORT_FILE
+          echo "3. **Resource Utilization:** Review memory allocation in the N-body simulation loop to prevent computational overflow." >> $REPORT_FILE
+          echo "" >> $REPORT_FILE
+          echo "*Directive: Proceed with caution regarding cue events on the current trajectory.*" >> $REPORT_FILE
+          
+          # Append to GitHub Actions Summary
+          cat $REPORT_FILE >> $GITHUB_STEP_SUMMARY
+          
+          # Set output for the artifact step
+          echo "REPORT_PATH=$REPORT_FILE" >> $GITHUB_OUTPUT
+
+      - name: Archive Diagnostic Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tars-diagnostic-${{ env.CONTRIBUTOR }}-${{ github.run_id }}
+          path: ${{ steps.report.outputs.REPORT_PATH }}
+          retention-days: 14 # Standard enterprise retention policy

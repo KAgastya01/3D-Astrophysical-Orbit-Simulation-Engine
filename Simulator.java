@@ -5,7 +5,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class main {
+public class Simulator {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("3D Astrophysics Orbital Engine (Vanilla Java)");

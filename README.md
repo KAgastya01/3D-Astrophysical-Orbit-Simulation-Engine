@@ -59,8 +59,8 @@ Once launched, the active window features an overlay heads-up telemetry display.
 Since this engine relies entirely on the native Java Runtime Environment (`java.desktop` modules), you do not need to configure Maven, Gradle, or download extra `.jar` packages. 
 
 1. Clone or download the source directory files.
-2. Open your terminal shell and navigate to your directory containing `main.java`.
+2. Open your terminal shell and navigate to your directory containing `Simulator.java`.
 3. Compile and execute using the standard unified launch command:
 
 ```cmd
-java main.java
+java Simulator.java

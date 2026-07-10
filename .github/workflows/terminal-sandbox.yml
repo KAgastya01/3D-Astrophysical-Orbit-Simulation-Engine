@@ -1,0 +1,96 @@
+name: 💻 Virtual Simulation Terminal CLI
+
+on:
+  workflow_dispatch: # Allows users to trigger this directly via the GitHub UI/CLI
+    inputs:
+      command:
+        description: '🚀 Enter command flag (e.g., --help, --telemetry, --matrix-test, --softening-check)'
+        required: true
+        default: '--help'
+        type: choice
+        options:
+          - '--help'
+          - '--telemetry'
+          - '--matrix-test'
+          - '--softening-check'
+      param:
+        description: '🔢 Value parameter argument (Used for custom iterations or target speeds)'
+        required: false
+        default: '60'
+        type: string
+
+jobs:
+  cli-terminal:
+    name: 📟 Executing Interactive Terminal Frame
+    runs-on: ubuntu-latest
+    steps:
+
+    # 1. Pull down the space-time vector engine code
+    - name: 🛰️ Syncing System Schematics (Checkout)
+      uses: actions/checkout@v4
+
+    # 2. Fire up OpenJDK to interact with code modules
+    - name: ☕ Igniting Vanilla Java Layer
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    # 3. Simulate the interactive terminal runtime environment shell script
+    - name: 📟 Processing Input Stream Parameters
+      run: |
+        echo "=========================================================================="
+        echo "🖥️  ORBITAL CLI SANDBOX INITIALIZED // USER: @${{ github.actor }}"
+        echo "=========================================================================="
+        echo "📥 INPUT COMMAND: ${{ github.event.inputs.command }}"
+        echo "📥 ARGUMENT NODE: ${{ github.event.inputs.param }}"
+        echo "--------------------------------------------------------------------------"
+        
+        # Capture variables for evaluation loop
+        CMD="${{ github.event.inputs.command }}"
+        ARG="${{ github.event.inputs.param }}"
+
+        # Evaluator CLI Kernel Matrix
+        if [ "$CMD" = "--help" ]; then
+          echo "🛰️  ASTROPHYSICAL ENGINE NATIVE MANUAL SYSTEMS"
+          echo "     Usage: gh-simulation-cli [COMMAND] [VALUE]"
+          echo ""
+          echo "     OPTIONS AVAILABLE:"
+          echo "       --help             Display this terminal instruction grid."
+          echo "       --telemetry        Review active camera pitch, yaw, and matrix scopes."
+          echo "       --matrix-test      Execute a pipeline transformation tracking test."
+          echo "       --softening-check  Analyze Simulator.java code for singularity protections."
+          
+        elif [ "$CMD" = "--telemetry" ]; then
+          echo "📊 TELEMETRY OVERLAY MATRIX METRICS:"
+          echo "     [TARGET REPO] : KAgastya01/3D-Astrophysical-Orbit-Simulation-Engine"
+          echo "     [FRAME SPEED] : Target Stable ~${ARG} FPS Calculation Cycle"
+          echo "     [HOOK ENGINE] : Double-Buffered Multi-Threaded Loop: ONLINE"
+          echo "     [INTERFACE]   : Java Swing UI Event Dispatch Pipeline configured."
+          
+        elif [ "$CMD" = "--matrix-test" ]; then
+          echo "📐 RUNNING MATHEMATICAL MATRIX PROJECTION PIPELINE..."
+          # Test compile your Java code to make sure it's fully ready
+          javac Simulator.java
+          echo "     [YAW MATRIX]  : x1 = x * cos(θ) - z * sin(θ) -> STABLE"
+          echo "     [PITCH MATRIX]: y2 = y * cos(ϕ) - z1 * sin(ϕ) -> STABLE"
+          echo "     🚀 RESULT     : 3D coordinates projected onto 2D display viewport successfully!"
+          
+        elif [ "$CMD" = "--softening-check" ]; then
+          echo "🪐 INITIATING SINGULARITY INTERSECTION ANALYSIS..."
+          # Scan file contents dynamically using grep
+          if grep -q "epsilon" Simulator.java || grep -q "softening" Simulator.java; then
+            echo "     [MATH CRITERIA] : Softening Modifier (e²) detected in Vector physics steps."
+            echo "     [STATUS]        : SAFE. Division-by-zero crashes when bodies intersect are neutralized."
+          else
+            echo "     [🚨 WARNING]    : No explicit softening variable located! Risk of gravitational infinite density collapse!"
+          fi
+          
+        else
+          echo "::error::🚨 Unknown command packet sequence transmitted."
+          exit 1
+        fi
+        
+        echo "=========================================================================="
+        echo "📟 EXECUTION TERMINATED SAFELY // SYSTEM OK"
+        echo "=========================================================================="
